@@ -1,0 +1,82 @@
+<div class="wizard">
+  <aside class="sidebar">
+    <ul>
+      @for (section of schema.sections; track section.id; let i = $index) {
+      <li [class.active]="activeSection() === i" (click)="activeSection.set(i)">
+        {{ section.title }}
+      </li>
+      }
+    </ul>
+  </aside>
+
+  <section>
+    @let current = schema.sections[activeSection()];
+
+    <h2>{{ current.title }}</h2>
+
+    <form>
+      @for (field of current.fields; track field.id) {
+      <div class="card">
+        <label [for]="field.id">{{ field.label }}</label>
+
+        <!-- Text -->
+        @if (field.type === 'text') {
+        <input [id]="field.id" type="text" [required]="field.required" />
+        }
+
+        <!-- Number -->
+        @if (field.type === 'number') {
+        <input [id]="field.id" type="number" [required]="field.required" />
+        }
+
+        <!-- Long Text -->
+        @if (field.type === 'textarea') {
+        <textarea [id]="field.id" rows="4" cols="40" [required]="field.required"></textarea>
+        }
+
+        <!-- Radio -->
+        @if (field.type === 'radio') {
+        <div class="radio-group">
+          @for (option of field.options; track option) {
+          <label>
+            <input type="radio" [name]="field.id" [value]="option" [required]="field.required" />
+            <span>{{ option }}</span>
+          </label>
+          }
+        </div>
+        }
+
+        <!-- Toggle -->
+        @if (field.type === 'toggle') {
+        <label class="switch">
+          <input type="checkbox" [checked]="field.default" [name]="field.id" />
+          <span class="slider"></span>
+        </label>
+        }
+
+        <!-- Dropdown -->
+        @if (field.type === 'select') {
+        <div class="dropdown-group">
+          <select [id]="field.id" [required]="field.required">
+            <option value="" disabled selected>Select</option>
+            @for (option of field.options; track option) {
+            <option [value]="option">{{ option }}</option>
+            }
+          </select>
+        </div>
+        }
+      </div>
+      }
+    </form>
+
+    <div class="actions">
+      @if (activeSection() === schema.sections.length - 1) {
+      <button class="previous" type="button" (click)="prevSectionClick()">Previous</button>
+      }
+
+      <button class="primary" type="button" (click)="nextSectionClick()">
+        {{ activeSection() === schema.sections.length - 1 ? 'Submit' : 'Next' }}
+      </button>
+    </div>
+  </section>
+</div>
