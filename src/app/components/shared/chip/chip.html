@@ -1,8 +1,6 @@
-<button>
+<button type="button" [class.actived]="active">
   @if(icon) {
-  <span class="material-symbols-outlined">
-    {{ icon }}
-  </span>
+    <span class="material-symbols-outlined">{{ icon }}</span>
   }
   {{ label }}
 </button>

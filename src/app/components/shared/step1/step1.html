@@ -4,8 +4,9 @@
     @for (chip of schemas; track chip.id) {
     <app-chip
       (click)="choose(chip.id)"
-      icon="{{ chip.icon }}"
-      label="{{ chip.title }}"
+      [icon]="chip.icon"
+      [label]="chip.title"
+      [active]="wizard.selectedSchema() === chip.id"
     />
     }
   </div>

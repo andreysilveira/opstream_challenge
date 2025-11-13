@@ -1,6 +1,6 @@
 import { of } from 'rxjs';
 import { catchError, retry } from 'rxjs/operators';
-import { Component, inject, signal } from '@angular/core';
+import { Component, ElementRef, HostListener, inject, signal } from '@angular/core';
 import { Chip } from '../chip/chip';
 import { Button } from '../button/button';
 import { WizardService } from '../../../services/wizard.service';
@@ -20,6 +20,7 @@ export class Step1 {
   schemas: any[] = [];
   schema: any | null = null;
   error = signal<string | null>(null);
+  private readonly elementRef: ElementRef = inject(ElementRef);
 
   ngOnInit() {
     this.loadSchemas();
@@ -56,7 +57,13 @@ export class Step1 {
   }
 
   choose(type: string) {
-    this.wizard.selectedSchema.set(type);
+    const selected = this.wizard.selectedSchema();
+
+    if (selected === type) {
+      this.wizard.selectedSchema.set(null);
+    } else {
+      this.wizard.selectedSchema.set(type);
+    }
   }
 
   start() {
@@ -66,4 +73,15 @@ export class Step1 {
     this.wizard.reset();
     this.wizard.next();
   }
+
+@HostListener('document:click', ['$event'])
+onDocumentClick(event: MouseEvent) {
+  const target = event.target as HTMLElement;
+
+  const clickedOnChip = target.closest('app-chip');
+
+  if (!clickedOnChip) {
+    this.wizard.selectedSchema.set(null);
+  }
+}
 }

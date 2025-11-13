@@ -10,4 +10,5 @@ import { Component, Input } from '@angular/core';
 export class Chip {
   @Input() icon!: string;
   @Input() label!: string;
+  @Input() active = false;
 }
