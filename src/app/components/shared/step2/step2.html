@@ -59,12 +59,14 @@
               </div>
             }
             @case ('select') {
-              <select [formControlName]="field.id.toString()">
-                <option value="">Select</option>
-                @for (option of field.options; track option) {
-                  <option [value]="option">{{ option }}</option>
-                }
-              </select>
+              <div class="dropdown-group">
+                <select [formControlName]="field.id.toString()">
+                  <option value="">Select</option>
+                  @for (option of field.options; track option) {
+                    <option [value]="option">{{ option }}</option>
+                  }
+                </select>
+              </div>
             }
             @case ('toggle') {
               <label class="switch">
