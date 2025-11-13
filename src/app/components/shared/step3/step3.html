@@ -1,4 +1,5 @@
 <section>
+  @if (summary().length > 0) {
   <div class="hero">
     <img src="assets/cupcake.png" alt="A delicious cupcake" />
     <div>
@@ -12,15 +13,18 @@
 
     <div>
       @for (item of summary(); track item.question) {
-        <ul>
-          <li>{{ item.question }}</li>
-          <li [class.answered]="item.answered" [class.not-answered]="!item.answered">
-            {{ item.answer }}
-          </li>
-        </ul>
+      <ul>
+        <li>{{ item.question }}</li>
+        <li [class.answered]="item.answered" [class.not-answered]="!item.answered">
+          {{ item.answer }}
+        </li>
+      </ul>
       }
     </div>
   </div>
 
   <app-button label="Complete the flow and Reset" (click)="resetFlow()" />
+  } @else {
+  <div class="loader"></div>
+  }
 </section>
