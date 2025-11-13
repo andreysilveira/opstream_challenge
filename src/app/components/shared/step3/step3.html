@@ -3,7 +3,7 @@
     <img src="assets/cupcake.png" alt="A delicious cupcake" />
     <div>
       <h1>Awesome!</h1>
-      <span>It's works!</span>
+      <span>It works!</span>
     </div>
   </div>
 
@@ -11,32 +11,16 @@
     <h2>Summary</h2>
 
     <div>
-      <ul>
-        <li>Questions</li>
-        <li class="answered">Answer</li>
-      </ul>
-
-      <ul>
-        <li>Questions</li>
-        <li class="not-answered">Not Answer</li>
-      </ul>
-
-      <ul>
-        <li>Questions</li>
-        <li class="answered">Answer</li>
-      </ul>
-
-      <ul>
-        <li>Questions</li>
-        <li class="not-answered">Not Answer</li>
-      </ul>
-
-      <ul>
-        <li>Questions</li>
-        <li class="answered">Answer</li>
-      </ul>
+      @for (item of summary(); track item.question) {
+        <ul>
+          <li>{{ item.question }}</li>
+          <li [class.answered]="item.answered" [class.not-answered]="!item.answered">
+            {{ item.answer }}
+          </li>
+        </ul>
+      }
     </div>
   </div>
 
-  <app-button label="Complete the flow and Reset" (click)="resetFlow()"/>
+  <app-button label="Complete the flow and Reset" (click)="resetFlow()" />
 </section>
