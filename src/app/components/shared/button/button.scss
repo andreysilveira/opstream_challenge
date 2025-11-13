@@ -1,0 +1,44 @@
+@use '../../../../variables.scss' as *;
+
+button {
+  font: inherit;
+  cursor: pointer;
+  border: none;
+  border-radius: 4.5px;
+  padding: 1rem 0.594rem;
+  box-shadow: 0px 0px 12px 0px rgba(0, 0, 0, 0.08);
+
+  transition: background-color 0.25s ease-in-out, transform 0.25s ease-in-out;
+
+  &.primary {
+    background-color: $brand-main;
+    color: $mono-white;
+
+    &:hover {
+      background-color: $brand-hover;
+    }
+  }
+
+  &.secondary {
+    background-color: $mono-white;
+    color: $mono-dark1;
+    border: 1px solid $mono-gray3;
+
+    &:hover {
+      background-color: #f5f5f5;
+      border: 1px solid #e5e5e5;
+    }
+  }
+
+  &:disabled {
+    background-color: $mono-gray4;
+    color: $mono-gray2;
+    // opacity: 0.6;
+    cursor: not-allowed;
+    // box-shadow: none;
+
+    &:hover {
+      background-color: $mono-gray4;
+    }
+  }
+}

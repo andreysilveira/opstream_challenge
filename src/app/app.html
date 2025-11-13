@@ -1,0 +1,13 @@
+<main>
+   @switch (step()) {
+    @case (0) { <app-step1 /> }
+      @case (1) {
+    @if (wizard.schema()) {
+      <app-step2 />
+    } @else {
+      <div class="loader"></div>
+    }
+  }
+    @case (2) { <app-step3 /> }
+}
+</main>

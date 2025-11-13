@@ -1,0 +1,13 @@
+<section>
+  <h1>What do you need to purchase?</h1>
+  <div>
+    @for (chip of schemas; track chip.id) {
+    <app-chip
+      (click)="choose(chip.id)"
+      icon="{{ chip.icon }}"
+      label="{{ chip.title }}"
+    />
+    }
+  </div>
+  <app-button (click)="start()" [disabled]="!wizard.selectedSchema()" label="Start" />
+</section>

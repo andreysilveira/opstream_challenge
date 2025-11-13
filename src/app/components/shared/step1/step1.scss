@@ -1,0 +1,50 @@
+@use '../../../../variables.scss' as *;
+
+section {
+  display: flex;
+  align-items: center;
+  flex-direction: column;
+  justify-content: center;
+  gap: 2.313rem;
+  background-color: $mono-white;
+  border-radius: 1.563rem;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.07);
+  width: 1029px;
+  padding-top: 5.5rem;
+  padding-bottom: 14.063rem;
+
+  h1 {
+    font-size: 1.25rem;
+    font-weight: 700;
+    color: $mono-dark1;
+  }
+
+  > div {
+    display: flex;
+    gap: 0.5rem;
+  }
+
+  button {
+    font: inherit;
+    cursor: pointer;
+    border: none;
+    border-radius: 4.5px;
+    padding: 1rem 0.594rem;
+    background-color: $brand-main;
+    color: $mono-white;
+    box-shadow: 0px 0px 12px 0px rgba(0, 0, 0, 0.08);
+
+    transition: background-color 0.25s ease-in-out, transform 0.25s ease-in-out;
+
+    &:hover {
+      background-color: $brand-hover;
+    }
+
+    &:disabled {
+      background-color: $mono-gray4;
+      // opacity: 0.6;
+      cursor: not-allowed;
+      // box-shadow: none;
+    }
+  }
+}

@@ -1,0 +1,54 @@
+@use '../../../../variables.scss' as *;
+
+button {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  font: inherit;
+  font-size: 14px;
+  font-weight: 500;
+  cursor: pointer;
+  border: 1px solid $mono-gray3;
+  border-radius: 6.25rem;
+  padding: 0.656rem 0.75rem;
+  background-color: $mono-white;
+  color: $mono-dark1;
+  box-shadow: 0px 0px 12px 0px rgba(0, 0, 0, 0.08);
+
+  transition: background-color 0.25s ease-in-out, transform 0.25s ease-in-out;
+
+  span {
+    font-size: 1.125rem;
+    font-weight: 900;
+  }
+
+  &:hover {
+    background-color: #f5f5f5;
+  }
+
+  &:active {
+    border: 1px solid $mono-gray3;
+    transform: scale(0.97);
+  }
+
+  &:disabled {
+    background-color: $mono-gray4;
+    opacity: 0.3;
+    cursor: not-allowed;
+    border: none;
+  }
+
+  &.actived {
+    background-color: $brand-light;
+    border: 1px solid $brand-main;
+    color: $brand-main;
+    font-weight: 600;
+
+    &:hover {
+      color: $brand-green37;
+      background-color: #def6f0;
+      border: 1px solid $brand-green37;
+      transform: scale(1);
+    }
+  }
+}
