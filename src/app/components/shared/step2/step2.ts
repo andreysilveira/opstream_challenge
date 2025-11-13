@@ -1,28 +1,73 @@
-import { Component, inject, Input, signal } from '@angular/core';
-import { FormBuilder, FormsModule } from '@angular/forms';
+import { Component, inject, signal, effect, OnInit } from '@angular/core';
+import { CommonModule } from '@angular/common';
+import { ReactiveFormsModule, FormBuilder, Validators } from '@angular/forms';
 import { WizardService } from '../../../services/wizard.service';
+import { ApiService } from '../../../services/api.service';
+import { forkJoin } from 'rxjs';
+import { finalize } from 'rxjs/operators';
 
 @Component({
   selector: 'app-step2',
   standalone: true,
-  imports: [FormsModule],
+  imports: [CommonModule, ReactiveFormsModule],
   templateUrl: './step2.html',
   styleUrl: './step2.scss',
 })
-export class Step2 {
-  @Input() selectedSchema: string | null = null;
+export class Step2 implements OnInit {
+  private wizard = inject(WizardService);
+  private fb = inject(FormBuilder);
+  private api = inject(ApiService);
 
-  wizard = inject(WizardService);
   activeSection = signal(0);
+  saveState = signal<'idle' | 'saving' | 'saved' | 'error'>('idle');
+  form = signal(this.fb.group({}));
   schema = this.wizard.schema();
+  requestId = this.generateRequestId();
+
+  ngOnInit() {
+    this.buildForm();
+    this.setupAutosave();
+  }
+
+  buildForm() {
+    const controls: Record<string, any> = {};
+
+    for (const section of this.schema.sections ?? []) {
+      for (const field of section.fields ?? []) {
+        const controlName = String(field.id);
+        const validators = field.required ? [Validators.required] : [];
+        controls[controlName] = [field.default ?? '', validators];
+      }
+    }
+
+    const builtForm = this.fb.group(controls);
+    this.form.set(builtForm);
+  }
+
+  setupAutosave() {
+    const f = this.form();
+    if (!f) return;
+
+    f.valueChanges.subscribe(() => {
+      this.saveState.set('saving');
+
+      setTimeout(() => {
+        if (Math.random() > 0.9) {
+          this.saveState.set('error');
+          setTimeout(() => this.saveState.set('saving'), 2000);
+        } else {
+          this.saveState.set('saved');
+        }
+      }, 800);
+    });
+  }
 
   nextSectionClick() {
     const next = this.activeSection() + 1;
-
     if (next < this.schema.sections.length) {
       this.activeSection.set(next);
     } else {
-      this.wizard.next();
+      this.submitForm();
     }
   }
 
@@ -32,7 +77,49 @@ export class Step2 {
   }
 
   submitForm() {
-    console.log('✅ Form submitted!');
-    this.wizard.next();
+    const formGroup = this.form();
+    if (formGroup.invalid) {
+      formGroup.markAllAsTouched();
+      this.saveState.set('error');
+      return;
+    }
+
+    const payload = formGroup.value;
+    this.saveState.set('saving');
+
+    const requests = Object.entries(payload).map(([questionId, value]) =>
+      this.api.saveAnswer(this.requestId, Number(questionId), value)
+    );
+
+    if (requests.length === 0) {
+      this.saveState.set('error');
+      console.warn('⚠️ No fields to submit');
+      return;
+    }
+
+    forkJoin(requests)
+      .pipe(finalize(() => this.saveState.set('idle')))
+      .subscribe({
+        next: (responses) => {
+          console.log('✅ Form successfully saved:', responses);
+          this.wizard.updateFormData(this.form().value);
+          this.saveState.set('saved');
+          this.wizard.next();
+        },
+        error: (err) => {
+          console.error('❌ Error sending form:', err);
+          this.saveState.set('error');
+        },
+      });
+  }
+
+  private generateRequestId(): string {
+    return (
+      Date.now().toString(36) +
+      '-' +
+      Math.random().toString(36).substring(2, 10) +
+      '-' +
+      crypto.getRandomValues(new Uint32Array(1))[0].toString(36)
+    );
   }
 }
