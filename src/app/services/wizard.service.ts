@@ -22,4 +22,11 @@ export class WizardService {
     this.selectedSchema.set(null);
     this.formData.set({});
   }
+
+  updateFormData(partialData: Record<string, any>) {
+    this.formData.update((prev) => ({
+      ...prev,
+      ...partialData,
+    }));
+  }
 }
