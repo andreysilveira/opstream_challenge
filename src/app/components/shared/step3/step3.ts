@@ -4,6 +4,7 @@ import { Button } from '../button/button';
 
 @Component({
   selector: 'app-step3',
+  standalone: true,
   imports: [Button],
   templateUrl: './step3.html',
   styleUrl: './step3.scss',
