@@ -1,4 +1,6 @@
-export const schemas = [
+import { Schema } from "../types/schema";
+
+export const schemas: Schema[] = [
   {
     id: 'software-request',
     title: 'Software Request',
