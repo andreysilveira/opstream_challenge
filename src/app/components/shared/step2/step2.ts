@@ -1,4 +1,4 @@
-import { Component, inject, signal, effect, OnInit } from '@angular/core';
+import { Component, inject, signal } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { ReactiveFormsModule, FormBuilder, Validators } from '@angular/forms';
 import { WizardService } from '../../../services/wizard.service';
@@ -13,7 +13,7 @@ import { finalize } from 'rxjs/operators';
   templateUrl: './step2.html',
   styleUrl: './step2.scss',
 })
-export class Step2 implements OnInit {
+export class Step2 {
   private wizard = inject(WizardService);
   private fb = inject(FormBuilder);
   private api = inject(ApiService);
