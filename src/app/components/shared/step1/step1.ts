@@ -1,10 +1,11 @@
 import { of } from 'rxjs';
 import { catchError, retry } from 'rxjs/operators';
-import { Component, ElementRef, HostListener, inject, signal } from '@angular/core';
+import { Component, HostListener, inject, signal } from '@angular/core';
 import { Chip } from '../chip/chip';
 import { Button } from '../button/button';
 import { WizardService } from '../../../services/wizard.service';
 import { ApiService } from '../../../services/api.service';
+import { Schema } from '../../../types/schema';
 
 @Component({
   selector: 'app-step1',
@@ -20,7 +21,6 @@ export class Step1 {
   schemas: any[] = [];
   schema: any | null = null;
   error = signal<string | null>(null);
-  private readonly elementRef: ElementRef = inject(ElementRef);
 
   ngOnInit() {
     this.loadSchemas();
@@ -36,7 +36,7 @@ export class Step1 {
           return of([]);
         })
       )
-      .subscribe((data) => {
+      .subscribe((data: Schema[]) => {
         this.schemas = data;
       });
   }
@@ -74,14 +74,14 @@ export class Step1 {
     this.wizard.next();
   }
 
-@HostListener('document:click', ['$event'])
-onDocumentClick(event: MouseEvent) {
-  const target = event.target as HTMLElement;
+  @HostListener('document:click', ['$event'])
+  onDocumentClick(event: MouseEvent) {
+    const target = event.target as HTMLElement;
 
-  const clickedOnChip = target.closest('app-chip');
+    const clickedOnChip = target.closest('app-chip');
 
-  if (!clickedOnChip) {
-    this.wizard.selectedSchema.set(null);
+    if (!clickedOnChip) {
+      this.wizard.selectedSchema.set(null);
+    }
   }
-}
 }
