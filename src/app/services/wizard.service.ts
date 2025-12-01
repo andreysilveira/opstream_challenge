@@ -20,6 +20,7 @@ export class WizardService {
   reset() {
     this.step.set(0);
     this.selectedSchema.set(null);
+    this.schema.set(null);
     this.formData.set({});
   }
 

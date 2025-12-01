@@ -24,6 +24,7 @@ export class Step1 {
 
   ngOnInit() {
     this.loadSchemas();
+    this.wizard.selectedSchema.set(null)
   }
 
   loadSchemas() {
