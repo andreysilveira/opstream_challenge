@@ -1,6 +1,7 @@
 import { inject, Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { Observable } from 'rxjs';
+import { Schema } from '../types/schema';
 
 @Injectable({
   providedIn: 'root',
@@ -8,12 +9,12 @@ import { Observable } from 'rxjs';
 export class ApiService {
   private http = inject(HttpClient);
 
-  getSchemas(): Observable<any[]> {
-    return this.http.get<any[]>('/api/schemas');
+  getSchemas(): Observable<Schema[]> {
+    return this.http.get<Schema[]>('/api/schemas');
   }
 
-  getSchemaById(id: string): Observable<any> {
-    return this.http.get<any>(`/api/schemas/${id}`);
+  getSchemaById(id: string): Observable<Schema> {
+    return this.http.get<Schema>(`/api/schemas/${id}`);
   }
 
   saveAnswer(requestId: string, questionId: number, value: any): Observable<any> {
