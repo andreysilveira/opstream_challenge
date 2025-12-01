@@ -30,13 +30,16 @@ export class Step2 {
   }
 
   buildForm() {
+    const cached = localStorage.getItem(`step2-[${this.schema.id}]-cache`);
+    const cache = cached ? JSON.parse(cached) : null;
     const controls: Record<string, any> = {};
 
     for (const section of this.schema.sections ?? []) {
       for (const field of section.fields ?? []) {
         const controlName = String(field.id);
         const validators = field.required ? [Validators.required] : [];
-        controls[controlName] = [field.default ?? '', validators];
+        const initialValue = cache?.[controlName] ?? field.default ?? '';
+        controls[controlName] = [initialValue, validators];
       }
     }
 
@@ -48,7 +51,9 @@ export class Step2 {
     const f = this.form();
     if (!f) return;
 
-    f.valueChanges.subscribe(() => {
+    f.valueChanges.subscribe((value) => {
+      localStorage.setItem(`step2-[${this.schema.id}]-cache`, JSON.stringify(value));
+
       this.saveState.set('saving');
 
       setTimeout(() => {
@@ -84,6 +89,7 @@ export class Step2 {
       return;
     }
 
+    // It saves one question at a time
     const payload = formGroup.value;
     this.saveState.set('saving');
 
@@ -102,6 +108,7 @@ export class Step2 {
       .subscribe({
         next: (responses) => {
           console.log('✅ Form successfully saved:', responses);
+          localStorage.removeItem(`step2-[${this.schema.id}]-cache`);
           this.wizard.updateFormData(this.form().value);
           this.saveState.set('saved');
           this.wizard.next();
@@ -112,6 +119,27 @@ export class Step2 {
         },
       });
   }
+
+  // It saves all question at a time
+  //   const payload = {
+  //     requestId: this.requestId,
+  //     answers: formGroup.value,
+  //   };
+
+  //   this.saveState.set('saving');
+
+  //   this.api
+  //     .saveAnswer(payload)
+  //     .pipe(finalize(() => this.saveState.set('idle')))
+  //     .subscribe({
+  //       next: (res) => {
+  //         console.log('Saved:', res);
+  //         this.saveState.set('saved');
+  //         this.wizard.next();
+  //       },
+  //       error: () => this.saveState.set('error'),
+  //     });
+  // }
 
   private generateRequestId(): string {
     return (
